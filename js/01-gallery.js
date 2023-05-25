@@ -3,52 +3,51 @@ import { galleryItems } from './gallery-items.js';
 
 console.log(galleryItems);
 
-const galleryEl = document.querySelector('.gallery');
-
-const cardGallery = ({preview, original, description}) => 
-  `<li class="gallery__item">
-  <a class="gallery__link" href="${original}">
-    <img
-      class="gallery__image"
-      src="${preview}"
-      data-source="${original}"
-      alt="${description}"
-    />
-  </a>
+const galleryElement = document.querySelector('.gallery');
+const imagesElement = galleryItems
+  .map(
+    item =>
+      `<li class = "gallery__item"><a class="gallery__link" href="${item.original}">
+  <img
+    class="gallery__image"
+    src="${item.preview}"
+    data-source="${item.original}"
+    alt="${item.description}"
+  />
+</a>
 </li>`
-;
-const markup = galleryItems.map((element) =>  cardGallery(element)).join("");
+  )
+  .join('');
 
-galleryEl.insertAdjacentHTML("afterbegin", markup);
+galleryElement.insertAdjacentHTML('afterbegin', imagesElement);
 
+galleryElement.addEventListener('click', imageClick);
 
-// galleryEl.addEventListener('click', imageClick);
-
-// function imageClick(event) {
-//     event.preventDefault();
+function imageClick(event) {
+    event.preventDefault();
   
-//     if (event.target.nodeName !== 'IMG') {
-//       return;
-//     }
-//     createModal(event.target).show();
-//   }
+    if (event.target.nodeName !== 'IMG') {
+      return;
+    }
+    imgModal(event.target).show();
+  }
   
-//   function createModal(event) {
-//     const html = `<img src="${event.dataset.source}">`;
-//     let instance = basicLightbox.create(html, {
-//       onShow: () => {
-//         window.addEventListener('keydown', onKeyClose);
-//       },
-//       onClose: () => {
-//         window.removeEventListener('keydown', onKeyClose);
-//       },
-//     });
-//     return instance;
+  function imgModal(event) {
+    const changeImg = `<img src="${event.dataset.source}">`;
+    let showClose = basicLightbox.create(changeImg, {
+      onShow: () => {
+        window.addEventListener('keydown', closeButton);
+      },
+      onClose: () => {
+        window.removeEventListener('keydown', closeButton);
+      },
+    });
+    return showClose;
   
-//     function onKeyClose(event) {
-//       if (event.code !== 'Escape') return;
-//       instance.close();
-//     }
-//   }
+    function closeButton (event) {
+      if (event.code !== 'Escape') return;
+      showClose.close();
+    }
+  }
    
 
